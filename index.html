@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>WYSIWYG</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+	</head>
+</body>
+
+	<form style="padding: 30px">
+		<h2>Simple WYSIWYG Editor</h2>
+
+		<textarea id="editor">
+			Some content here.
+		</textarea>
+	</form>
+
+	<script src="js/jquery-1.8.0.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.wysiwyg.js"></script>
+	<script>
+		$(function() {
+			$('#editor').wysiwyg({
+				width: '600px'
+			});
+		});
+	</script>
+
+</body>
+</html>
