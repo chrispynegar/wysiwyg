@@ -17,7 +17,8 @@ $.fn.wysiwyg = function(options) {
         width: '400px',
         height: '200px',
         btnGroupClass: 'btn-group',
-        btnClass: 'btn'
+        btnClass: 'btn',
+        preview: false
     }, options);
     
     // core wysiwyg methods
@@ -58,13 +59,36 @@ $.fn.wysiwyg = function(options) {
             return toolbarDiv;
         },
         execCommand: function(e) {
+            console.log(e);
             $(this).toggleClass('selected');
             var contentWindow = editor.contentWindow;
             contentWindow.focus();
-            contentWindow.document.execCommand($(this).data('commandName'), false, '');
+            contentWindow.document.execCommand($(this).data('commandName'), false, ($(this).data('value') != undefined ? $(this).data('value') : ''));
             contentWindow.focus();
 
             $this.val(editorBody.context.body.innerHTML);
+
+            if(settings.preview == true) {
+                $(settings.previewIdentifier).html(editorBody.context.body.innerHTML);
+            }
+
+            return false;
+        },
+        execCommandCustom: function(name, commandInterface, value) {
+            $(this).toggleClass('selected');
+            var contentWindow = editor.contentWindow;
+            contentWindow.focus();
+            contentWindow.document.execCommand(name, commandInterface, value);
+            contentWindow.focus();
+
+            $this.val(editorBody.context.body.innerHTML);
+
+            if(settings.preview == true) {
+                $(settings.previewIdentifier).html(editorBody.context.body.innerHTML);
+            }
+
+            console.log(contentWindow);
+            console.log(name);
 
             return false;
         }
@@ -175,6 +199,27 @@ $.fn.wysiwyg = function(options) {
                     'class': 'icon-align-right'
                 }).appendTo(btnJustifyRight);
             }
+        },
+        hyperlink: {
+            link: function(i) {
+                
+                var url;
+
+                var button = $('<button/>', {
+                    text: 'Link',
+                    'class': settings.btnClass,
+                }).appendTo(i);
+
+                $(button).bind('click', function(e) {
+                    url = prompt('Please enter your URL', 'http://');
+
+                    if(url) {
+                        wysiwyg.execCommandCustom('createlink', true, url);
+                    }
+
+                    return false;
+                });
+            }
         }
     };
     
@@ -192,6 +237,10 @@ $.fn.wysiwyg = function(options) {
        
        editorBody = $(editor.contentWindow.document).find('body');
        editorBody.append($this.val());
+
+       if(settings.preview == true) {
+            $(settings.previewIdentifier).html($this.val());
+       }
        
        $(editorBody).live('keyup', function(e) {
            $this.val(editorBody.context.body.innerHTML);
@@ -225,6 +274,12 @@ $.fn.wysiwyg = function(options) {
        button.justify.left(justifyBtnGroup);
        button.justify.center(justifyBtnGroup);
        button.justify.right(justifyBtnGroup);
+
+       var hyperlinkBtnGroup = $('<div/>', {
+          'class': settings.btnGroupClass 
+       }).appendTo(toolbar);
+
+       button.hyperlink.link(hyperlinkBtnGroup);
     });
     
 }
