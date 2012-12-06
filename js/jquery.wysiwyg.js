@@ -14,7 +14,7 @@ $.fn.wysiwyg = function(options) {
     
     // set default options
     var settings = $.extend({
-        width: '200px',
+        width: '400px',
         height: '200px',
         btnGroupClass: 'btn-group',
         btnClass: 'btn'
